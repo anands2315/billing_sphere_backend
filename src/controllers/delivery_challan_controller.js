@@ -137,11 +137,19 @@ const createDeliveryChallan = async (req, res) => {
       const item = await ItemModel.findById(entry.itemName).session(session);
       console.log(item.companyCode);
       console.log(req.body.companyCode);
+      console.log(item);
 
       // Decrement the stock of the item in the current store
       item.maximumStock -= entry.qty;
       await item.save({ session });
+      await ItemModel.updateOne(
+        { _id: entry.itemName },
+        { $inc: { maximumStock: -entry.qty } },
+        { session }
+      );
       console.log(`Decremented maximumStock by ${entry.qty} for item ${item._id}`);
+      console.log(item);
+
 
       // Check if the item exists in the target store
       let existingItem = await ItemModel.findOne({
@@ -152,12 +160,16 @@ const createDeliveryChallan = async (req, res) => {
       let itemId;
       if (existingItem) {
         console.log("yes its already there");
-        // If the item exists in the target store, update its stock
-        existingItem.maximumStock += entry.qty;
-        await existingItem.save({ session });
+        // If the item exists in the target store, update its stock using updateOne
+        await ItemModel.updateOne(
+          { _id: existingItem._id },
+          { $inc: { maximumStock: entry.qty } },
+          { session }
+        );
         itemId = existingItem._id;
         console.log("........." + itemId);
       } else {
+
         const newItem = new ItemModel({
           itemGroup: item.itemGroup,
           itemBrand: item.itemBrand,
@@ -187,6 +199,7 @@ const createDeliveryChallan = async (req, res) => {
           companyCode: req.body.companyCode,
         });
 
+        newItem.$locals = { skipBarcodeCreation: true };
         await newItem.save({ session });
         itemId = newItem._id;
         console.log("Created new item:", newItem.toObject());
@@ -517,7 +530,7 @@ const deleteDeliveryChallan = async (req, res) => {
 
       if (!receivingItem) {
         console.warn(`Item with codeNo ${sendingItem.codeNo} not found in receiving store`);
-        return; 
+        return;
       }
 
       receivingItem.maximumStock -= entry.qty;
