@@ -40,6 +40,9 @@ mongoose
     // "mongodb+srv://anandsinghfuerte:anandsingh2315@cluster0.maywh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     // "mongodb://fdsupermartbd:fuerteretail1313@35.154.157.177:27017/?authSource=test"
     // "mongodb+srv://anandsinghfuerte:anand2315@cluster0.b2kwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    // "mongodb+srv://anandsinghfuerte:anand2315@cluster0.b2kwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    // "mongodb+srv://anandsinghfuerte:anand2315@cluster0.b2kwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    // "mongodb+srv://anandsinghfuerte:anand2315@cluster0.b2kwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then(() => {
     console.log("Connected to database");
